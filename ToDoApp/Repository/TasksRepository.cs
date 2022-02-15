@@ -25,6 +25,15 @@ namespace ToDoApp.Repository
             new TaskToDo { Id = Guid.NewGuid(), MarkAsDone = false, Title = "PROŠEĆI PSA" , Text = "", CreationTime = DateTimeOffset.UtcNow }
         };
 
+        public async Task Delete(Guid id)
+        {
+            var index = repo.FindIndex(t => t.Id == id);
+
+            repo.RemoveAt(index);
+
+            await Task.CompletedTask;
+        }
+
         public async Task<ActionResult<TaskToDo>> findById(Guid id)
         {
             var task = repo.Where(t => t.Id.Equals(id)).SingleOrDefault();

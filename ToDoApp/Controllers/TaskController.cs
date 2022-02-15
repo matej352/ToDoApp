@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +25,11 @@ namespace ToDoApp.Controllers
 
         }
 
+
+        /// <summary>
+        /// Dohvaća sve zadatke
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IEnumerable<TaskDTO>> GetAllTasks()
         {
@@ -46,15 +50,27 @@ namespace ToDoApp.Controllers
 
         }
 
+        /// <summary>
+        /// Dohvaća određeni zadatak 
+        /// </summary>
+        /// <param name="id">Jednoznačan identifikator zadatka</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<TaskDTO>> GetTask(Guid id)
         {
             var task = await repository.findById(id);
+            if (task == null) {
+                return Problem(statusCode: StatusCodes.Status404NotFound, detail: $"Invalid id = {id}");
+            }
             return task.Value.AsTaskDTO();
         
         }
        
-
+        /// <summary>
+        /// Stvara novi zadatak. Inicijalno se smatra neobavljenim
+        /// </summary>
+        /// <param name="task">Podaci o zadatku. Svi podaci su obavezni</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<TaskDTO>> CreateTask([FromBody] CreateTaskDTO task)
         {
@@ -66,6 +82,12 @@ namespace ToDoApp.Controllers
         }
 
 
+        /// <summary>
+        /// Ažurira traženi zadatak
+        /// </summary>
+        /// <param name="id">Jedinstveni identifikator zadatka koji se želi ažurirati</param>
+        /// <param name="task">Podaci zadatka za ažuriranje</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateTask(Guid id, UpdateTaskDTO task)
         {
@@ -79,6 +101,23 @@ namespace ToDoApp.Controllers
                 return Problem(statusCode: StatusCodes.Status404NotFound, detail: $"Invalid id = {id}");
             }
             await repository.Update(task);
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Briše zadatak određen s identifikatorom
+        /// </summary>
+        /// <param name="id">Identifikator zadatka koji se briše</param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTask(Guid id)
+        {
+            if (repository.findById(id).Equals(null)) {
+                return Problem(statusCode: StatusCodes.Status404NotFound, detail: $"Invalid id = {id}");
+            }
+
+            await repository.Delete(id);
+
             return NoContent();
         }
 

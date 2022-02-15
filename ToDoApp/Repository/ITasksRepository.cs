@@ -15,5 +15,6 @@ namespace ToDoApp.Repository
         public Task<Guid> save(CreateTaskDTO task);
         public Task<ActionResult<TaskToDo>> findById(Guid id);
         public Task Update(UpdateTaskDTO dto);
+        public Task Delete(Guid id);
     }
 }
