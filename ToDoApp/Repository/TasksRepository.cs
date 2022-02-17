@@ -19,10 +19,10 @@ namespace ToDoApp.Repository
                 Id = Guid.NewGuid(), 
                 MarkAsDone = true,
                 Title = "OPERI SUĐE",
-                Text = "",
+                Text = "bolje nego prošli put",
                 CreationTime = new DateTimeOffset(2008, 5, 1, 8, 6, 32, new TimeSpan(1, 0, 0)) 
             },
-            new TaskToDo { Id = Guid.NewGuid(), MarkAsDone = false, Title = "PROŠEĆI PSA" , Text = "", CreationTime = DateTimeOffset.UtcNow }
+            new TaskToDo { Id = Guid.NewGuid(), MarkAsDone = false, Title = "PROŠEĆI PSA" , Text = "Barem pola sata", CreationTime = DateTimeOffset.UtcNow }
         };
 
         public async Task Delete(Guid id)
